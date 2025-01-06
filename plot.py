@@ -52,26 +52,26 @@ def read_data(file_path):
     return data
 
 # Read the data from the file
-file_path = 'outputs.txt'  # Replace with your actual file path
+file_path = 'random_valuesfirst.txt'  # Replace with your actual file path
 data = read_data(file_path)
 
 # Extract the two columns (assuming each line contains two float values)
 # x_values = np.abs(data[:, 0])  # First column (x-axis)
-x_values = data  # First column (x-axis)
+values = data  # First column (x-axis)
 # y_values = data[:, 1]  # Second column (y-axis)
-
 # Calculate the gradient of the x_values
-gradient_x = np.abs(x_values)
+gradient_x = np.abs(values)
 
 # Plot the data in two separate line graphs
 plt.figure(figsize=(10, 6))
 
 # First plot: gradient of the x_values
 plt.subplot(2, 1, 1)  # Two rows, one column, first plot
-plt.plot(gradient_x, label='Current 1000 poll Rolling Average', color='blue')
-plt.xlabel('Time')
-plt.ylabel('Current 1000 poll Rolling Average')
-plt.title('Plot of Current (1000 poll Rolling Average)')
+plt.plot(gradient_x, label='Current 15 Miniute Rolling Average', color='blue')
+
+plt.xlabel('Time (Miniutes)')
+plt.ylabel('Current 15 Miniute Rolling Average')
+plt.title('Plot of Current (15 Miniute Rolling Average)')
 plt.grid(True)
 plt.legend()
 
