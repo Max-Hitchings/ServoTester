@@ -1,3 +1,4 @@
+import gc
 import time
 import math
 import random
@@ -5,15 +6,44 @@ from pimoroni import Button, Analog, AnalogMux
 from servo import Servo, servo2040, ServoCluster
 
 
+        
+gc.collect()        
+
+
+# Initialize variables
+current_sum = 0
+current_count = 0
+rolling_average = 0
+N = 10000  # Replace with the desired window size
+
+
+def save_to_memory(average):
+    print(f"Rolling average saved: {average}")
+    outputs.append(average)
+
+
+def update_rolling_average(current_reading):
+    global current_sum, current_count, rolling_average
+    
+    current_sum += current_reading
+    current_count += 1
+
+    if current_count == N:  # Check if we've reached the window size
+        rolling_average = current_sum / N
+        current_sum = 0
+        current_count = 0
+        save_to_memory(rolling_average)  # Store the average
+
+
 UPDATES = 50            # How many times to update Servos per second
-TIME_FOR_EACH_MOVE = 0.5  # The time to travel between each random value
+TIME_FOR_EACH_MOVE = 1  # The time to travel between each random value
 UPDATES_PER_MOVE = TIME_FOR_EACH_MOVE * UPDATES
 
-SERVO_EXTENT = 15      # How far from zero to move the servo
+SERVO_EXTENT = 14      # How far from zero to move the servo
 USE_COSINE = True       # Whether or not to use a cosine path between values
 
-LIMIT_FROM_CENTER = 15
-cluster_pins = [servo2040.SERVO_1, servo2040.SERVO_2]
+LIMIT_FROM_CENTER = 14
+cluster_pins = [servo2040.SERVO_1, servo2040.SERVO_2,servo2040.SERVO_3,servo2040.SERVO_4,servo2040.SERVO_5]
 # Create a servo on pin 0
 s = ServoCluster(0, 0, cluster_pins)
 # s = Servo(servo2040.SERVO_1)
@@ -51,10 +81,11 @@ while not user_sw.raw():
     else:
         # Move the servo linearly between values
         s.all_to_percent(percent_along, 0.0, 1.0, start_value, end_value)
-    outputs.append((s.value(cluster_pins[0]),int(cur_adc.read_current()*1000)))
+    # outputs.append((s.value(cluster_pins[0]),int(cur_adc.read_current()*1000)))
+    update_rolling_average(int(cur_adc.read_current()*1000))
     # Print out the value the servo is now at
     if count % 3 == 0:
-        print("Current =", cur_adc.read_current()*1000, "mA")
+        # print("Current =", cur_adc.read_current()*1000, "mA")
         count=0
         
     # print("Value = ", round(s.value(cluster_pins[1]), 3), sep="")
@@ -78,4 +109,4 @@ s.disable_all()
 
 with open('outputs.txt', 'w') as f:
     for x in outputs:
-        f.write(f"{x[0]},{x[1]}\n")
+        f.write(f"{x}\n")

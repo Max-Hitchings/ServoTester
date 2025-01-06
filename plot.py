@@ -52,37 +52,37 @@ def read_data(file_path):
     return data
 
 # Read the data from the file
-file_path = 'outputs2.txt'  # Replace with your actual file path
+file_path = 'outputs.txt'  # Replace with your actual file path
 data = read_data(file_path)
 
 # Extract the two columns (assuming each line contains two float values)
 # x_values = np.abs(data[:, 0])  # First column (x-axis)
-x_values = data[:, 0]  # First column (x-axis)
-y_values = data[:, 1]  # Second column (y-axis)
+x_values = data  # First column (x-axis)
+# y_values = data[:, 1]  # Second column (y-axis)
 
 # Calculate the gradient of the x_values
-gradient_x = np.abs(np.gradient(x_values))
+gradient_x = np.abs(x_values)
 
 # Plot the data in two separate line graphs
 plt.figure(figsize=(10, 6))
 
 # First plot: gradient of the x_values
 plt.subplot(2, 1, 1)  # Two rows, one column, first plot
-plt.plot(gradient_x, label='Gradient of Movement', color='blue')
+plt.plot(gradient_x, label='Current 1000 poll Rolling Average', color='blue')
 plt.xlabel('Time')
-plt.ylabel('Gradient of Movement')
-plt.title('Plot of Gradient of Movement')
+plt.ylabel('Current 1000 poll Rolling Average')
+plt.title('Plot of Current (1000 poll Rolling Average)')
 plt.grid(True)
 plt.legend()
 
-# Second plot: plot of y_values
-plt.subplot(2, 1, 2)  # Two rows, one column, second plot
-plt.plot(y_values, label='Current', color='red')
-plt.xlabel('Time')
-plt.ylabel('Current')
-plt.title('Plot of Current')
-plt.grid(True)
-plt.legend()
+# # Second plot: plot of y_values
+# plt.subplot(2, 1, 2)  # Two rows, one column, second plot
+# plt.plot(y_values, label='Current', color='red')
+# plt.xlabel('Time')
+# plt.ylabel('Current')
+# plt.title('Plot of Current')
+# plt.grid(True)
+# plt.legend()
 
 # Adjust the layout
 plt.tight_layout()
